@@ -1,4 +1,18 @@
 # schoology-cli
+a CLI for Schoology that doesn't require a developer API key.
+
+## Setup
+```bash
+git clone https://github.com/ko6lvm/schoology-cli.git
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+You can also create a custom alias to: 
+```
+$PATHTOREPO/venv/bin/python3 $PATHTOREPO/main.py
+```
+
 ## Session Management
 Once you run anything that fetches data from Schoology, it will open a browser for you to log into schoology.<br>
 Login data will be retained in `.browser_profile`, which is not uploaded to GitHub (see `.gitignore`)
