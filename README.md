@@ -59,13 +59,13 @@ Login data will be retained in `.browser_profile`, which is not uploaded to GitH
 {
   "course_id": str,               # e.g., "8465379643"
   "course_title": str,            # e.g., "Comp Prog Java - 2370"
-  "course_url": str,              # e.g., "https://fuhsd.schoology.com/course/8465379643/materials"
+  "course_url": str,              # e.g., "https://<school>.schoology.com/course/8465379643/materials"
   "total_assignments": int,       # e.g., 4
   "assignments": [
     {
       "id": str,                  # e.g., "8495011888" (Assignment ID)
       "title": str,               # e.g., "Java: Lab_HardwareMap"
-      "url": str,                 # e.g., "https://fuhsd.schoology.com/assignment/8495011888"
+      "url": str,                 # e.g., "https://<school>.schoology.com/assignment/8495011888"
       "category": Optional[str],  # e.g., "Assignment" or "Tests & Quizzes"
       "folder": Optional[str],    # e.g., "Lab_HardwareMap" (Parent Folder)
       "description_snippet": Optional[str],
