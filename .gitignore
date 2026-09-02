@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Schoology local data
+.browser_profile/
+.schoology_session
