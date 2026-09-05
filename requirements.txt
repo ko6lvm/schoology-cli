@@ -1,5 +1,4 @@
 rich
-schoolopy
 requests
 beautifulsoup4
 playwright

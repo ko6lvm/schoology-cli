@@ -264,13 +264,39 @@ def parse_assignment_detail_html(html_content: str, base_url: str = DEFAULT_BASE
             rev_link = li.select_one("a.dropbox-view-link, a[href*='dropbox']")
             status_el = li.select_one(".submission-status")
             desc_sub = li.select_one(".description")
-            rev_date = li.get("original-title") or (" ".join(rev_link.get_text().split()) if rev_link else "")
+
+            # Date of submission
+            # Schoology puts timestamp in original-title (rendered) or title (static HTML) or .visually-hidden
+            rev_date = li.get("original-title") or li.get("title")
+            if not rev_date:
+                # Check for visually-hidden date span inside li (outside or inside rev_link)
+                for vh in li.select(".visually-hidden"):
+                    vh_text = " ".join(vh.get_text().split())
+                    if re.search(r"\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b|\d{1,2}/\d{1,2}/\d{2,4}", vh_text, flags=re.IGNORECASE):
+                        rev_date = vh_text
+                        break
+
+            if not rev_date and rev_link:
+                link_copy = BeautifulSoup(str(rev_link), "html.parser")
+                for bad in link_copy.select(".visually-hidden, .picture, .revision-num"):
+                    bad.decompose()
+                rev_date = " ".join(link_copy.get_text().split())
+
             rev_url = urljoin(base_url, rev_link["href"]) if rev_link and rev_link.get("href") else None
 
+            # Status and description clean-up
+            status_str = " ".join(status_el.get_text().split()) if status_el else None
+            desc_str = None
+            if desc_sub:
+                desc_copy = BeautifulSoup(str(desc_sub), "html.parser")
+                for bad in desc_copy.select(".visually-hidden"):
+                    bad.decompose()
+                desc_str = " ".join(desc_copy.get_text().split())
+
             submissions.append({
-                "submitted_at": rev_date,
-                "status": " ".join(status_el.get_text().split()) if status_el else None,
-                "summary": " ".join(desc_sub.get_text().split()) if desc_sub else None,
+                "submitted_at": rev_date or None,
+                "status": status_str,
+                "summary": desc_str,
                 "url": rev_url,
             })
 

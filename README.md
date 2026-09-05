@@ -10,15 +10,14 @@ pip3 install -r requirements.txt
 ```
 You can also create a custom alias to: 
 ```
-$PATHTOREPO/venv/bin/python3 $PATHTOREPO/main.py
+{PATHTOREPO}/venv/bin/python3 {PATHTOREPO}/main.py
 ```
 
 ## Session Management
-Once you run anything that fetches data from Schoology, it will open a browser for you to log into schoology.<br>
+Initial login will be done by a browser window popup.
 Login data will be retained in `.browser_profile`, which is not uploaded to GitHub (see `.gitignore`)
 
 ## Architecture: How Data is Fetched
-
 ### Grades (`grades.py`)
 - **Single-Page Fetch**: Schoology serves the entire gradebook report for all enrolled courses on a single page (`/grades/grades`).
 - **No Multithreading Needed**: Because all courses and grade items are loaded in one single request, grades retrieval does not require parallel requests and cannot trigger HTTP 429 rate limits.
@@ -26,7 +25,7 @@ Login data will be retained in `.browser_profile`, which is not uploaded to GitH
 ### Assignments (`assignments.py`)
 - **Materials + Parallel Details Fetch**: The course materials page (`/course/{id}/materials?list_filter=assignments`) provides the assignment list. To extract full instructions, exact due dates, file attachments, and submission history, each assignment's info page (`/assignment/{id}/info`) must be retrieved.
 - **Multithreaded HTTP Worker Pool**: Uses session cookies extracted from Playwright to fetch assignment details concurrently.
-- **Rate-Limit Safe (HTTP 429 Prevention)**: Defaults to **2 concurrent workers** with an automatic exponential backoff retry mechanism (0.35s base delay) if Schoology's burst detector throttles a request.
+- **Rate-Limit Safe (HTTP 429 Prevention)**: Defaults to 2 concurrent workers with an automatic exponential backoff retry mechanism (0.35s base delay) if Schoology's burst detector throttles a request.
 
 ---
 
@@ -111,10 +110,9 @@ Login data will be retained in `.browser_profile`, which is not uploaded to GitH
 ```
 
 ## CLI Usage
-
 ### Interactive CLI (`main.py`)
 ```bash
-# Launch interactive dual-mode picker (Grades or Assignments)
+# Run CLI
 python main.py
 
 # Launch directly into Grades mode
